@@ -1,5 +1,5 @@
 # rsa-keygen
-Generates numbers required for RSA encryption and decryption keys.
-###### Requires primsieve library. Compile with -lprimesieve option.
+## Generates numbers required for RSA encryption and decryption keys.
 ---
-FOR EDUCATIONAL PURPOSES ONLY
+Requires primsieve library. Compile with -lprimesieve option.
+**FOR EDUCATIONAL PURPOSES ONLY**
