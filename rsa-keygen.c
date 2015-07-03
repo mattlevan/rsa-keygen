@@ -30,6 +30,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <math.h>
 #include <inttypes.h>
 #include <gmp.h>
@@ -39,26 +40,31 @@ void mpz_set_ull(mpz_t rop, unsigned long long op);
 
 int main()
 {
-    uint64_t max, random, nth, p, q; 
+    uint64_t max, random, p, q, n; 
+    int64_t nth;
     mpz_t mpz_n, mpz_p, mpz_q; // GMP variables
 
     max = primesieve_get_max_stop();
 
+    // Generate two random, large primes
     for (int i = 0; i < 2; i++) {
-        nth = arc4random_uniform(max);
-        printf("Random: %llu\n", nth);
+        nth = arc4random_uniform(UINT16_MAX);
+        // nth *= -1;
+        printf("%lld\n", nth);
         if (i == 0) {
-            p = primesieve_nth_prime(nth, max);
+            p = primesieve_nth_prime(nth, 0);
             printf("1st prime p = %llu\n", p);
         }
         else {
-            q = primesieve_nth_prime(nth, max);
+            q = primesieve_nth_prime(nth, 0);
             printf("2nd prime q = %llu\n", q);
         }
     }
 
-    // mpz_set_ui(mpz_p, p);
-    // mpz_set_ui(mpz_q, q);
+    n = p*q;
+    printf("n = p * q = %llu\n", n);
+    // mpz_set_ull(mpz_p, p);
+    // mpz_set_ull(mpz_q, q);
 
     // mpz_mul(mpz_n, mpz_p, mpz_q);
 
