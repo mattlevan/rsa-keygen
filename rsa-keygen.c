@@ -30,28 +30,36 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdbool.h>
-#include <gmp.h> // GNU Multiple Precision Arithmetic Library
-#include "miller-rabin.h" // Miller-Rabin primality test library
+#include <primesieve.h>
 
-#define PREC 10
-#define TOP 4000
 
-int main() {
-    mpz_t num; // declare very large int
+#define RAND_MAX 18446744026464911360
 
-    mpz_init(num); // initialize with a very large random number
-    mpz_set_ui(num, 1); // what does this do?
+int main()
+{
+    for (int i = 0; i < 2; i++) {
+        // Ensure random is less than RAND_MAX
+        uint64_t random = arc4random() % ((unsigned)RAND_MAX +1);
+        // Random to specify nth prime in primesieve_nth_prime() call
+        uint64_t nth = arc4random();
 
-    while (mpz_cmp_ui(num, TOP) < 0) {
-        if (miller_rabin_test(num, PREC)) {
-            gmp_printf("%Zd might be prime.\n", num);
+        if (i == 0) {
+            // Declare and assign p (first random, large prime)
+            uint64_t p = primesieve_nth_prime(nth, random);
         }
-
-        mpz_add_ui(num, num, 1);
+        else {
+            // Declare and assign q (second random, large prime)
+            uint64_t q = primesieve_nth_prime(nth, random);
+        }
     }
 
-    mpz_clear(num);
+  uint64_t n = 1000;
+  if (argv[1])
+    n = atol(argv[1]);
+  uint64_t prime = primesieve_nth_prime(n, 0);
+  printf("%lluth prime = %llu\n", n, prime);
 
-    return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }
