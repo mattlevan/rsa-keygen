@@ -32,50 +32,46 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
-#include <inttypes.h>
-#include <gmp.h>
 #include <primesieve.h>
-
-void mpz_set_ull(mpz_t rop, unsigned long long op);
 
 int main()
 {
-    uint64_t max, random, p, q, n; 
-    int64_t nth;
-    mpz_t mpz_n, mpz_p, mpz_q; // GMP variables
+    uint64_t nth, random, p, q, d, e, n; 
+    uint64_t d_x_e, phi_n;
 
-    max = primesieve_get_max_stop();
-
-    // Generate two random, large primes
-    for (int i = 0; i < 2; i++) {
+    // Generate three random, large primes p and q
+    for (int i = 0; i < 3; i++) {
+        // Fetch a random number using arc4random
         nth = arc4random_uniform(UINT16_MAX);
-        // nth *= -1;
-        printf("%lld\n", nth);
+
         if (i == 0) {
+            // Find the nth prime from 0
             p = primesieve_nth_prime(nth, 0);
-            printf("1st prime p = %llu\n", p);
+            printf("p      = %llu\n", p);
         }
-        else {
+        else if (i == 1) {
+            // Find the nth prime from 0
             q = primesieve_nth_prime(nth, 0);
-            printf("2nd prime q = %llu\n", q);
+            printf("q      = %llu\n", q);
+        }
+        else if (i == 2) {
+            // Find the nth prime from 0
+            e = primesieve_nth_prime(nth, 0);
+            printf("e      = %llu\n", e);
         }
     }
 
+    // Calculate and print the value of n
     n = p*q;
-    printf("n = p * q = %llu\n", n);
-    // mpz_set_ull(mpz_p, p);
-    // mpz_set_ull(mpz_q, q);
+    printf("n      = %llu\n", n);
 
-    // mpz_mul(mpz_n, mpz_p, mpz_q);
+    // Calculate and print the value of phi(n)
+    phi_n = (p-1)*(q-1);
+    printf("phi(n) = %llu\n", phi_n);
 
+    // Calculate and print the value of d
 
-    // gmp_printf("n = p*q = %Z\n", mpz_n);
-
+    printf("d      = %llu\n\n", d);
+    
     return EXIT_SUCCESS;
 }
-
-void mpz_set_ull(mpz_t rop, unsigned long long op)
-{
-    mpz_import(rop, 1, 1, sizeof(op), 0, 0, &op);
-}
-
