@@ -35,31 +35,27 @@
 #include <primesieve.h>
 
 
-#define RAND_MAX 18446744026464911360
+#define MAX 18446744026464911360
 
 int main()
 {
-    for (int i = 0; i < 2; i++) {
-        // Ensure random is less than RAND_MAX
-        uint64_t random = arc4random() % ((unsigned)RAND_MAX +1);
-        // Random to specify nth prime in primesieve_nth_prime() call
-        uint64_t nth = arc4random();
+    uint64_t random, nth, p, q, n;
 
+    for (int i = 0; i < 2; i++) {
+        nth = arc4random_uniform(10);
         if (i == 0) {
-            // Declare and assign p (first random, large prime)
-            uint64_t p = primesieve_nth_prime(nth, random);
+            p = primesieve_nth_prime(nth, MAX);
         }
         else {
-            // Declare and assign q (second random, large prime)
-            uint64_t q = primesieve_nth_prime(nth, random);
+            q = primesieve_nth_prime(nth, MAX);
         }
     }
 
-  uint64_t n = 1000;
-  if (argv[1])
-    n = atol(argv[1]);
-  uint64_t prime = primesieve_nth_prime(n, 0);
-  printf("%lluth prime = %llu\n", n, prime);
+    n = p*q;
 
-  return EXIT_SUCCESS;
+    printf("First prime p = %llu\n", p);
+    printf("Second prime q = %llu\n", q);
+    printf("n = p*q = %llu\n", n);
+
+    return EXIT_SUCCESS;
 }
