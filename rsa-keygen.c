@@ -34,17 +34,18 @@
 #include <math.h>
 #include <primesieve.h>
 
+int int_pow(int base, int exp);
 uint64_t gcd(uint64_t a, uint64_t b);
 
 int main()
 {
-    uint64_t nth, random, p, q, d, e, n; 
+    uint64_t nth, random, p, q, d, e, n, k; 
     uint64_t d_x_e, phi_n;
 
     // Generate two random, large primes p and q
     for (int i = 0; i < 2; i++) {
         // Fetch a random number using arc4random
-        nth = arc4random_uniform(UINT8_MAX);
+        nth = arc4random_uniform(10);
 
         if (i == 0) {
             // Find the nth prime from 0
@@ -66,8 +67,12 @@ int main()
     phi_n = (p-1)*(q-1);
     printf("phi(n)  = %llu\n", phi_n);
 
+    // Calculate and print the value of k
+    k = arc4random_uniform(9) + 2;
+    printf("k       = %llu\n", k);
+
     // Generate small number e that is relatively prime with phi(n)
-    for (e = arc4random_uniform(11); e > 0; e++) {
+    for (e = arc4random_uniform(19); e > 1; e++) {
         if (gcd(e, phi_n) == 1) {
             printf("e       = %llu\n", e);
             break;
@@ -75,9 +80,32 @@ int main()
     }
 
     // Calculate and print the value of d
-    d = (phi_n + 1) / e;
-    printf("d       = %llu\n", d);
-    printf("(d*e)%cn = %llu\n", '%', (d*e)%n);
+    for (d = 0; d < n; d++) {
+        if (((d*e) % n) == 1) {
+            printf("d       = %llu\n", d);
+            break;
+        }
+    }
+
+    // Calculate and print (d*e) % n
+    printf("(d*e)%cn = %llu\n\n", '%', (d*e)%n);
+
+    // Print public and private key pairs
+    printf("Pub key pair <e,n>: <%llu,%llu>\n", e, n);
+    printf("Prv key pair <d,n>: <%llu,%llu>\n\n", d, n);
+
+    // Get message
+    float m = 5;
+
+    // Encrypt message
+    int c = int_pow(m,e);
+    c %= n;
+    printf("Encrypted message: %d\n", c);
+
+    // Decrypt message
+    int message = int_pow(c,d);
+    message %= n;
+    printf("Decrypted message: %d\n", message);
 
     return EXIT_SUCCESS;
 }
@@ -88,4 +116,15 @@ uint64_t gcd(uint64_t a, uint64_t b) {
     }
 
     return gcd(b, a % b);
+}
+
+int int_pow(int base, int exp) {
+    if (exp == 0)
+        return 1;
+    else if (exp % 2)
+        return base * int_pow(base, exp - 1);
+    else {
+        int temp = int_pow(base, exp / 2);
+        return temp * temp;
+    }
 }
