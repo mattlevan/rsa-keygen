@@ -72,7 +72,7 @@ int main()
     printf("k       = %llu\n", k);
 
     // Generate small number e that is relatively prime with phi(n)
-    for (e = arc4random_uniform(19); e > 1; e++) {
+    for (e = (uint64_t)arc4random_uniform(19); e > 1; e++) {
         if (gcd(e, phi_n) == 1) {
             printf("e       = %llu\n", e);
             break;
@@ -95,17 +95,17 @@ int main()
     printf("Prv key pair <d,n>: <%llu,%llu>\n\n", d, n);
 
     // Get message
-    float m = 5;
+    uint64_t m = 5;
 
     // Encrypt message
-    int c = int_pow(m,e);
+    uint64_t c = uint64_t_pow(m,e);
     c %= n;
-    printf("Encrypted message: %d\n", c);
+    printf("Encrypted message: %llu\n", c);
 
     // Decrypt message
-    int message = int_pow(c,d);
+    uint64_t message = uint64_t_pow(c,d);
     message %= n;
-    printf("Decrypted message: %d\n", message);
+    printf("Decrypted message: %llu\n", message);
 
     return EXIT_SUCCESS;
 }
@@ -118,13 +118,15 @@ uint64_t gcd(uint64_t a, uint64_t b) {
     return gcd(b, a % b);
 }
 
-int int_pow(int base, int exp) {
-    if (exp == 0)
+uint64_t uint64_t_pow(uint64_t base, uint64_t exp) {
+    if (exp == 0) {
         return 1;
-    else if (exp % 2)
-        return base * int_pow(base, exp - 1);
+    }
+    else if (exp % 2) {
+        return base * uint64_t_pow(base, exp - 1);
+    }
     else {
-        int temp = int_pow(base, exp / 2);
+        uint64_t temp = uint64_t_pow(base, exp / 2);
         return temp * temp;
     }
 }
