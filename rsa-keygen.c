@@ -45,15 +45,15 @@ int main()
     // Generate two random, large primes p and q
     for (int i = 0; i < 2; i++) {
         // Fetch a random number using arc4random
-        nth = arc4random_uniform(7);
+        nth = arc4random_uniform(UINT8_MAX);
 
         if (i == 0) {
-            // Find the nth prime from 0
+            // Find the nth prime from 2
             p = primesieve_nth_prime(nth, 2);
             printf("p           = %llu\n", p);
         }
-        else {
-            // Find the nth prime from 0
+        else if (i == 1) {
+            // Find the nth prime from 2
             q = primesieve_nth_prime(nth, 2);
             printf("q           = %llu\n", q);
         }
