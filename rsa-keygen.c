@@ -34,7 +34,7 @@
 #include <math.h>
 #include <primesieve.h>
 
-int int_pow(int base, int exp);
+uint64_t uint64_t_pow(uint64_t base, uint64_t exp);
 uint64_t gcd(uint64_t a, uint64_t b);
 
 int main()
@@ -45,67 +45,51 @@ int main()
     // Generate two random, large primes p and q
     for (int i = 0; i < 2; i++) {
         // Fetch a random number using arc4random
-        nth = arc4random_uniform(10);
+        nth = arc4random_uniform(7);
 
         if (i == 0) {
             // Find the nth prime from 0
-            p = primesieve_nth_prime(nth, 0);
-            printf("p       = %llu\n", p);
+            p = primesieve_nth_prime(nth, 2);
+            printf("p           = %llu\n", p);
         }
         else {
             // Find the nth prime from 0
-            q = primesieve_nth_prime(nth, 0);
-            printf("q       = %llu\n", q);
+            q = primesieve_nth_prime(nth, 2);
+            printf("q           = %llu\n", q);
         }
     }
 
     // Calculate and print the value of n
     n = p*q;
-    printf("n       = %llu\n", n);
+    printf("n           = %llu\n", n);
 
     // Calculate and print the value of phi(n)
     phi_n = (p-1)*(q-1);
-    printf("phi(n)  = %llu\n", phi_n);
-
-    // Calculate and print the value of k
-    k = arc4random_uniform(9) + 2;
-    printf("k       = %llu\n", k);
+    printf("phi(n)      = %llu\n", phi_n);
 
     // Generate small number e that is relatively prime with phi(n)
-    for (e = (uint64_t)arc4random_uniform(19); e > 1; e++) {
+    for (e = 2; e < UINT64_MAX; e++) {
+        e = (uint64_t)e;
         if (gcd(e, phi_n) == 1) {
-            printf("e       = %llu\n", e);
+            printf("e           = %llu\n", e);
             break;
         }
     }
 
     // Calculate and print the value of d
-    for (d = 0; d < n; d++) {
-        if (((d*e) % n) == 1) {
-            printf("d       = %llu\n", d);
+    for (d = 2; d < UINT64_MAX; d++) {
+        if ((((d*e) % phi_n) == 1) && (d != e)) {
+            printf("d           = %llu\n", d);
             break;
         }
     }
 
     // Calculate and print (d*e) % n
-    printf("(d*e)%cn = %llu\n\n", '%', (d*e)%n);
+    printf("(d*e)%cphi_n = %llu\n\n", '%', (d*e) % phi_n);
 
     // Print public and private key pairs
     printf("Pub key pair <e,n>: <%llu,%llu>\n", e, n);
     printf("Prv key pair <d,n>: <%llu,%llu>\n\n", d, n);
-
-    // Get message
-    uint64_t m = 5;
-
-    // Encrypt message
-    uint64_t c = uint64_t_pow(m,e);
-    c %= n;
-    printf("Encrypted message: %llu\n", c);
-
-    // Decrypt message
-    uint64_t message = uint64_t_pow(c,d);
-    message %= n;
-    printf("Decrypted message: %llu\n", message);
 
     return EXIT_SUCCESS;
 }
