@@ -15,7 +15,9 @@
  * p, q, and e such that...
  * p is a large, random prime number
  * q is a different, large, random prime number
- * e is a different, large, random prime number
+ * e is a different, large (but small in this program)
+ * random prime number that is relatively prime with
+ * phi(n)
  *
  * n such that...
  * n is simply (p*q).
@@ -39,8 +41,7 @@ uint64_t gcd(uint64_t a, uint64_t b);
 
 int main()
 {
-    uint64_t nth, random, p, q, d, e, n, k; 
-    uint64_t d_x_e, phi_n;
+    uint64_t nth, random, p, q, d, e, n, phi_n; 
 
     // Generate two random, large primes p and q
     for (int i = 0; i < 2; i++) {
